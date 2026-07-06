@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <input type="text" id="inputed" placeholder="Write the city's name">
+        <div id="result"></div>
+        <script>
+            let inputed = document.getElementById("inputed")
+            let space = document.getElementById("result")
+            async function info() {
+                let location = inputed.value.trim()
+                if (!location) return
+                space.innerHTML = "loading..."
+                try{
+                let place = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${location}`)
+                let data = await place.json()
+                 if(!data.results){
+                    throw Error("e");
+                }
+                let city = data.results[0]
+                space.innerHTML = `<h1>place:${city.name}</h1><br>
+                latitude: ${city.latitude}<br>
+                longitude: ${city.longitude}<br>
+                timezone: ${city.timezone}<br>
+                country:${city.country}`
+                }catch(e){
+                    space.innerHTML= "Error this place is not found"
+                }
+            }
+            inputed.addEventListener("change", info)
+        </script>
+        </body>
+</html>
